@@ -1,12 +1,19 @@
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  ValidateBody, ValidatePathParam
+  ValidateBody, ValidatePathParam, TokenRequired
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
-import { Todo } from '../entities';
+import { Todo, User } from '../entities';
+import { TypeORMStore, fetchUser } from '@foal/typeorm';
 
+@TokenRequired({
+  cookie: true,
+  store: TypeORMStore,
+  // Make ctx.user be an instance of User.
+  user: fetchUser(User),
+})
 export class ApiController {
 
   @Get('/todos')
